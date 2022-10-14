@@ -76,7 +76,8 @@ useEffect(() => {
     let res=  await orbis.createPost({
       body:html,
       title:title,
-      context:"kjzl6cwe1jw148fg1h9lbi0kseyif24zzegoipd3k9ra7vdk7otfz6iqc3awba0"
+      context:"kjzl6cwe1jw148fg1h9lbi0kseyif24zzegoipd3k9ra7vdk7otfz6iqc3awba0",
+      des:"这是每一篇章的简介"
     },
     {
       type: "token-gated",

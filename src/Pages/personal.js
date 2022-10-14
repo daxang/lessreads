@@ -1,4 +1,6 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect,useContext } from 'react'
+import{Userinfo}from "../AppRouter"
+
 import { Layout,Collapse,Input,Button,Modal, Divider,List} from 'antd'
 import 'antd/dist/antd.css'
 import { Orbis } from "@orbisclub/orbis-sdk";
@@ -8,10 +10,12 @@ import { shortAddress } from './utils';
 let orbis = new Orbis()
 const { TextArea } = Input
 function Personal(){
-    const firstmen=["0xf940a19af21da9b77a134ddf4aa20453489d96f6","0x6fD008cefF57E1A1E579cCba51735CED0D9430D2","0x985a91d213A29A1377E1626B6d27f30368C1D8bB","0x6d84347Bf42aB41b4F9086B003f425Ea1ead712A","0xae68C01A5b4B964554298d63E0CE8dA7c59E3b42"]
+    const userinfos=useContext(Userinfo)
+    const firstmen=["0xf940a19af21da9b77a134ddf4aa20453489d96f6","0xaA974D7F215F0f6E31b36f8AADD4e59539F753a0","0xaa974d7f215f0f6e31b36f8aadd4e59539f753a0","0x6fD008cefF57E1A1E579cCba51735CED0D9430D2","0x985a91d213a29a1377e1626b6d27f30368c1d8bb","0xae68c01a5b4b964554298d63e0ce8da7c59e3b42","0x6d84347bf42ab41b4f9086b003f425ea1ead712a"]
     const[user,setUser]=useState()
     const[address,setAddress]=useState()
     const[show,setShow]=useState(false)
+    const[showworlds,setShowworlds]=useState(false)
     const[showCreateWorld,setShowCreateWorld]=useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const[finalchannels,setFinalchannels]=useState()
@@ -27,32 +31,30 @@ function Personal(){
     const channels=[]
     const channels0=[]
     async function getUserData(){
-        let res = await orbis.isConnected()
-        if(res.status == 200) {
+        if(userinfos) {
             console.log("连接成功")
-            console.log(res)
-            let add=res.did.slice(17,59).toLowerCase()
-            
-            console.log(add)
-            console.log(firstmen.includes(add))
-            if(firstmen.includes(add)){
+           // let add=res.did.slice(17,59)
+            console.log(firstmen.includes(userinfos.useradd))
+            if(firstmen.includes(userinfos.useradd)){
+                console.log("showCreateworld")
                 setShowCreateWorld(true)
             }
-            if(res.details.profile){
+           /* if(res.details.profile){
                 setUser(res.details.profile.username)
             }else{
                 setUser(add)
-            }
+            }*/
         }else{
-            setUser()
-            setAddress()
+            alert("connect your wallet")
         }
     }
 
     useEffect(()=>{
+        console.log("userinfos is")
+        console.log(userinfos)
         getUserData()
-        getchannels()
-    },[user])
+        getmychannels()
+    },[userinfos])
 
     async function createUni(){
         let res = await orbis.createGroup({
@@ -108,17 +110,20 @@ function Personal(){
        
     }
 
-    async function getchannels(){
+    async function getmychannels(){
         console.log("开始获取group")
         let { data, error } = await orbis.getGroup("kjzl6cwe1jw146k66vx5m39yxwp0i12gdifop9cq43e2h29psfxpip6qt2lurdy")
         if(data){
             const channels00=data.channels.slice(1)
             console.log(channels00)
-            setFinalchannels(channels00)}
-
+            for(var i=0;i<channels00.length;i++){
+                getChannels(channels00[i])
+            }
+           setFinalchannels(channels)
     }
+}
 
-   /* async function getChannels(channelid){
+   async function getChannels(channelid){
         let{data,error}=await orbis.getChannel(channelid)
         if(data){
             console.log(data)
@@ -127,14 +132,14 @@ function Personal(){
             var channelinfo=data.content.description
             var creator=data.creator.slice(17,59)
         console.log(channels)
-        if(channelid!="kjzl6cwe1jw14b7pqvj2bg9zce3gkb57bfpi9i1vublq57eix4jap8w0ndm62bh"){
             if(firstmen.includes(creator)){
+                setShowworlds(true)
                 channels.push({channelid:channelid,chanchannelname:channelname,channelinfo:channelinfo,creator:creator})
+            } else{
+                setShowworlds(false)
             }
         }
-           
-        }
-    }*/
+    }
   /*   async function getUni(){
         let { data, error } = await orbis.getGroup(group_id)
 
@@ -166,15 +171,16 @@ function Personal(){
             <div className='personalWorlds' style={{marginTop:"20px"}}>
                 <h2>Worlds</h2>
                 <div style={{width:"50%"}}>
-                    {finalchannels?<List
+                    {showworlds?<List
                         className="demo-loadmore-list"
                         itemLayout="horizontal"
                         dataSource={finalchannels}
+                        style={{height:"200px"}}
                         renderItem={item => (
                             <List.Item >
                                      <div className="source">
                                         <a >
-                                            <Link to={ '/oneworld/'+item.stream_id} style={{color:"black"}}>{item.content.name}</Link> 
+                                            <Link to={ '/worlds/'+item.stream_id} style={{color:"black"}}>{item.content.name}</Link> 
                                             </a>
                                       
                                     </div>
@@ -188,8 +194,8 @@ function Personal(){
                             
                             </List.Item>
                         )}
-                    />:<div ></div>}
-                        <div style={{width:"50%"}}>
+                    />:<div >no worlds of yours</div>}
+                        <div style={{width:"50%",height:"200px",marginTop:"50px"}}>
                         {showCreateWorld? <div><Button type="primary" shape="round" onClick={isShowModal} >create a new world</Button></div>:<div></div>}
                         <Modal title="Your new world" open={isModalOpen} onOk={createNewWorld} onCancel={handleCancel}>
                             <Input placeholder='name of the new world' style={{marginBottom:"10px"}} id="newworldname"></Input>

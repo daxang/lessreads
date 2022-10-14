@@ -145,12 +145,10 @@ export default function OneWorld() {
             }
         }
 
-
-
-
     }
 
     async function deletepost(postid){
+        console.log("postid是"+postid)
         let res = await orbis.deletePost(postid)
         console.log(res)
     }
