@@ -85,7 +85,7 @@ useEffect(() => {
     console.log("start to post")
     console.log(html)
     console.log(title)
-    const title1=document.getElementById("title").value
+    const title1=document.getElementsByClassName("title")[1].value
     let res=  await orbis.editPost(postId,{
       body:html,
       title:title1
@@ -93,13 +93,17 @@ useEffect(() => {
   console.log(res)
   
   }
+
+
         return (
             
                 <div >                                      
-                 <div>edit the chapter of {title}</div>
-                    <Form name={"edit"+title}>
-                    <Input id="title"  defaultValue={title} ></Input>
-                    </Form>
+                 <div>edit your chapter</div>
+                    <div className='chapterTitle'>
+                    <Input className="title"  defaultValue={title} />
+                    </div>
+
+
                   <div style={{ border: '1px solid #ccc', zIndex: 100, marginTop: '15px'}}>
                     <Toolbar
                         editor={editor}

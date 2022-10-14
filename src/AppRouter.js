@@ -112,9 +112,9 @@ export default function AppRouter() {
 
                         <div  className="wallet " style={{width:"14%",marginRight:"1%",textAlign:"right"}}>
                             <div>
-                                {showusername?<p> <Link to="/Personal"> {userinfos.username} &nbsp;</Link> <button onClick={()=>leave()} style={{border:"none",background:"none"}}>logout1 </button>
+                                {showusername?<p> <Link to="/Personal"> {userinfos.username} &nbsp;</Link> <button onClick={()=>leave()} style={{border:"none",background:"none"}}>logout </button>
                                 </p>: <span></span>}
-                                {userinfos&&!userinfos.username?<p>  <Link to="/Personal">{userinfos.usershortadd}</Link ><button onClick={()=>leave()} style={{border:"none",background:"none"}}>logout2</button>
+                                {userinfos&&!userinfos.username?<p>  <Link to="/Personal">{userinfos.usershortadd}</Link ><button onClick={()=>leave()} style={{border:"none",background:"none"}}>logout</button>
                                 </p>:<span></span>}
                             
                             {!userinfos?  <button onClick={() => connect()}>Connect</button>:<span></span>
