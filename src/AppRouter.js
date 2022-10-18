@@ -10,7 +10,7 @@ import App from "./Pages/App"
 import Write from './Pages/Write'
 import OneWorld from  './Pages/OneWorld'
 import Chapter from  './Pages/Chapter'
-import Personal from  './Pages/personal'
+import Personal from  './Pages/Personal'
 import Worlds from  './Pages/worlds'
 import Community from  './Pages/Community'
 import Edit from  './Pages/Edit'
