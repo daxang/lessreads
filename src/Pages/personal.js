@@ -1,16 +1,25 @@
 import React, { useState,useEffect,useContext } from 'react'
+<<<<<<< Updated upstream
 import{Userinfo}from "../AppRouter"
 
+=======
+>>>>>>> Stashed changes
 import { Layout,Collapse,Input,Button,Modal, Divider,List} from 'antd'
 import 'antd/dist/antd.css'
 import { Orbis } from "@orbisclub/orbis-sdk";
 import { Link } from 'react-router-dom';
 import { shortAddress } from './utils';
+import{Userinfo}from "../AppRouter"
+
 /** Initialize the Orbis class object */
 let orbis = new Orbis()
 const { TextArea } = Input
 function Personal(){
+<<<<<<< Updated upstream
     const firstmen=["0xf940a19af21da9b77a134ddf4aa20453489d96f6","0xe680cd7ca1df50d6c644ac56f99a9c734cec2c58","0x985a91d213a29a1377e1626b6d27f30368c1d8bb","0xae68c01a5b4b964554298d63e0ce8da7c59e3b42","0x6d84347bf42ab41b4f9086b003f425ea1ead712a"]
+=======
+    const firstmen=["0xf940a19af21da9b77a134ddf4aa20453489d96f6","0xe680cd7ca1df50d6c644ac56f99a9c734cec2c58","0xae68c01a5b4b964554298d63e0ce8da7c59e3b42","0x6d84347bf42ab41b4f9086b003f425ea1ead712a","0x985a91d213a29a1377e1626b6d27f30368c1d8bb"]
+>>>>>>> Stashed changes
     const[user,setUser]=useState()
     const userinfos=useContext(Userinfo)
     const[showworld,setShowworlds]=useState()
@@ -19,7 +28,14 @@ function Personal(){
     const[showCreateWorld,setShowCreateWorld]=useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const[finalchannels,setFinalchannels]=useState()
+    const userinfos=useContext(Userinfo)
 
+    const [groupcreator,setGroupcreator]=useState(false)
+
+    const [createdgroups,setCreatedgroups]=useState()
+    const createdgroups01=[]
+
+    const[ownuniverse,setOwnuniverse]=useState()
     const isShowModal = () => {
     setIsModalOpen(true);
     };
@@ -29,6 +45,7 @@ function Personal(){
     };
 
     const channels=[]
+<<<<<<< Updated upstream
     async function getUserData(){
         let res=await orbis.isConnected()
         console.log(res)
@@ -43,11 +60,63 @@ function Personal(){
                 setUser(userinfos.username)
             }else{
                 setUser(userinfos.useradd)
+=======
+    const channels0=[]
+    async function isconnected(){
+        let res=await orbis.isConnected()
+    }
+    async function getUserData(){
+        if(userinfos&&firstmen.includes(userinfos.useradd)) {
+            setShowCreateWorld(true)
+            console.log("开始执行getuserdata")
+            let{ data, error } = await orbis.getProfileGroups(userinfos.userid)
+            console.log("获取的全部groups 是")
+            console.log(data)
+            if(data){
+                for(var a=0;a<data.length;a++)
+                {
+                    console.log("开始获取单个group")
+                   getgroup(data[a].group_id)
+
+                }
             }
-        }else{
-            setUser()
-            setAddress()
+            console.log("createdgroups are")
+            console.log(createdgroups01)
+            console.log(createdgroups01.length)
+            setCreatedgroups(createdgroups01)
+            getchannels(createdgroups)
         }
+        
+    }
+    async function getgroup(id){ 
+        console.log("开始执行getgroup")
+        let {data,error}=await orbis.getGroup(id)
+  
+        if(data.creator==userinfos.userid){
+            setGroupcreator(true)
+            createdgroups01.push({groupname:data.content.name,groupid:id})
+
+        }
+    }
+
+    async function getchannels(list){
+        console.log("开始执行getchannels")
+        console.log(list)
+        for(var b=0;b<=list.length;b++){
+            console.log(list[b])
+            if(list[b].groupname=="testTwo"){
+                setOwnuniverse(list[b].groupid)
+                let { data, error } = await orbis.getGroup(list[b].groupid)
+                if(data){
+                    console.log("find channels")
+                    const channels00=data.channels.slice(1)
+                    console.log("找到的channel是")
+                    console.log(channels00)
+                    setFinalchannels(channels00)} 
+>>>>>>> Stashed changes
+            }
+        }
+              
     }
     async function getmychannels(){
         console.log("开始获取group")
@@ -84,17 +153,25 @@ function Personal(){
         }
     }
     useEffect(()=>{
+        isconnected()
         getUserData()
+<<<<<<< Updated upstream
         getmychannels()
+=======
+       // getchannels()
+
+>>>>>>> Stashed changes
     },[userinfos])
 
     async function createUni(){
+        console.log("开始执行createUni")
         let res = await orbis.createGroup({
             pfp: "",
-            name: "Universe"
+            name: "testTwo"
         });
         if(res.status==200){
-            console.log(res)
+            console.log("创造的group信息是")
+            setOwnuniverse(res.doc)
         }else{
             console.log("failed")
         }
@@ -118,6 +195,7 @@ function Personal(){
     }
         
     async function createNewWorld(){
+<<<<<<< Updated upstream
         console.log("开始创造世界")
         var newworldname = document.getElementsByClassName("newworldname")[0].value
         var newworldinfo=document.getElementsByClassName("newworldinfo")[0].value
@@ -130,19 +208,59 @@ function Personal(){
               name: newworldname,
               description: newworldinfo,
               type:"feed"
+=======
+        if(ownuniverse){
+            console.log("开始创造世界")
+            var newworldname = document.getElementById("newworldname").value
+            var newworldinfo=document.getElementById("newworldinfo").value
+           if(newworldname){
+            let res = await orbis.createChannel(
+                ownuniverse,
+                {
+                  group_id:ownuniverse,
+                  pfp: "",
+                  name: newworldname,
+                  description: newworldinfo
+                }
+              );
+            if(res.status==200){
+                console.log(res) 
+                setIsModalOpen(false)
+                console.log("生成成功")
+            }else{
+                console.log("failed")
+>>>>>>> Stashed changes
             }
-          );
-        if(res.status==200){
-            console.log(res) 
-            setIsModalOpen(false)
-            console.log("生成成功")
+           }
         }else{
-            console.log("failed")
+            console.log("开始先生成group，然后创造世界")
+            createUni()
+        console.log(ownuniverse)
+            var newworldname = document.getElementById("newworldname").value
+            var newworldinfo=document.getElementById("newworldinfo").value
+           if(newworldname){
+            let res = await orbis.createChannel(
+                ownuniverse,
+                {
+                  group_id:ownuniverse,
+                  pfp: "",
+                  name: newworldname,
+                  description: newworldinfo
+                }
+              );
+            if(res.status==200){
+                console.log(res) 
+                setIsModalOpen(false)
+                console.log("生成成功")
+            }else{
+                console.log("failed")
+            }
+           }
         }
-       }
        
     }
 
+<<<<<<< Updated upstream
     /*async function getchannels(){
         console.log("开始获取group")
         let { data, error } = await orbis.getGroup("kjzl6cwe1jw146k66vx5m39yxwp0i12gdifop9cq43e2h29psfxpip6qt2lurdy")
@@ -175,6 +293,8 @@ function Personal(){
 
     }     */
     
+=======
+>>>>>>> Stashed changes
     const showModal = () => {
         setShow(true);
         };
@@ -209,7 +329,11 @@ function Personal(){
                             <List.Item >
                                      <div className="source">
                                         <a >
+<<<<<<< Updated upstream
                                             <Link to={ '/worlds/'+item.channelid} style={{color:"black"}}>{item.channelname}</Link> 
+=======
+                                            <Link to={ '/worlds/'+item.stream_id} style={{color:"black"}}>{item.content.name}</Link> 
+>>>>>>> Stashed changes
                                             </a>
                                     </div>
                                 
