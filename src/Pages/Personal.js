@@ -8,7 +8,7 @@ import 'antd/dist/antd.css'
 import { Orbis } from "@orbisclub/orbis-sdk";
 import { Link } from 'react-router-dom';
 import { shortAddress } from './utils';
-import{Userinfo}from "../AppRouter"
+
 
 /** Initialize the Orbis class object */
 let orbis = new Orbis()
